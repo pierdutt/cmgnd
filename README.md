@@ -16,8 +16,6 @@ version](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)](https://g
 GPL-3](https://img.shields.io/badge/license-GPL--3-forestgreen.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 <!-- badges: end -->
 
-The goal of cmgnd is to …
-
 ## Installation
 
 You can install the development version of cmgnd from
@@ -27,3 +25,5 @@ You can install the development version of cmgnd from
 # install.packages("devtools")
 devtools::install_github("pierdutt/cmgnd")
 ```
+
+The goal of cmgnd is to … Working Progress Section

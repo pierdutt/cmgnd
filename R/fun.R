@@ -432,6 +432,18 @@ log.likelihood <- function(x, pi, mu, sigma, nu) {
   return(ll)
 }
 
+#' firstderivative
+#'
+#' firstderivative
+#' @noRd
+firstderivative=function(x, z, mu, sigma, nu){
+  indzero <- which((x - mu) == 0)
+  A <- (1 / nu) * ((1 / nu) * digamma(1 / nu) + 1)
+  B <- (abs((x - mu) / (sigma))^nu) * log(abs((x - mu) / (sigma)))
+  B[indzero] <- 0
+  num <- (sum(z * A) - sum(z * B))
+  return(num)
+}
 
 
 
