@@ -1,0 +1,23 @@
+Package: cmgnd
+Type: Package
+Title: Model-based Clustering and Density Estimation using cmgnd
+Version: 0.1.0
+Authors@R: 
+    c(person("Pierdomenico", "Duttilo", , "pierdomenico.duttilo@unipd.it", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-2036-7163")), 
+    person("Stefano Antonio", "Gattone", , "gattone@unich.it", role = c("aut"),
+           comment = c(ORCID = "0000-0002-6143-9012")), 
+    person("Alfred", "Kume", , "a.kume@kent.ac.uk", role = c("aut")))
+Description: The constrained mixture of generalized normal distributions (CMGND) model is an advanced statistical tool for analyzing univariate data with non-normal features, such as asymmetry, multi-modality, leptokurtosis, and heavy tails. The CMGND model introduces constrained parameters, reducing the number of parameters that need estimation and enhancing model performance.
+Depends: R (>= 4.0.0)
+Imports:
+    RcppAlgos,
+    lubridate,
+    stats,
+    utils,
+    gnorm,
+    purrr,
+    ggplot2
+Encoding: UTF-8
+RoxygenNote: 7.2.3
+License: GPL (>= 3)
