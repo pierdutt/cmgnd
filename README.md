@@ -26,6 +26,8 @@ You can install the development version of cmgnd from
 devtools::install_github("pierdutt/cmgnd")
 ```
 
+<div style="text-align: justify;">
+
 cmgnd is an R package designed to analyse univariate data with complex
 patterns, including asymmetry, multi-modality, leptokurtosis, and heavy
 tails. The package implements the univariate constrained mixture of
@@ -33,6 +35,8 @@ generalized normal distributions (CMGND) model, allowing parameter
 constraints to be applied globally or to specific subpartitions of
 mixture components, thereby reducing model complexity and improving
 estimation performance.
+
+</div>
 
 Some References
 
