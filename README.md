@@ -26,4 +26,23 @@ You can install the development version of cmgnd from
 devtools::install_github("pierdutt/cmgnd")
 ```
 
-The goal of cmgnd is to … Working Progress Section
+cmgnd is an R package designed to analyse univariate data with complex
+patterns, including asymmetry, multi-modality, leptokurtosis, and heavy
+tails. The package implements the univariate constrained mixture of
+generalized normal distributions (CMGND) model, allowing parameter
+constraints to be applied globally or to specific subpartitions of
+mixture components, thereby reducing model complexity and improving
+estimation performance.
+
+Duttilo, P. (2024). Modelling financial returns with mixtures of
+generalized normal distributions. PhD Thesis, University “G. d’Annunzio”
+of Chieti-Pescara, pp. 1-166,
+<https://doi.org/10.48550/arXiv.2411.11847>
+
+Duttilo, P. and Gattone, S.A. (2024). Enhancing parameter estimation in
+finite mixture of generalized normal distributions. pp. 1-26,
+<https://doi.org/10.48550/arXiv.2410.21559>
+
+Duttilo, P., Kume A. and Gattone, S.A. (2023). Constrained Mixtures of
+Generalized Normal Distributions. In: “SEAS IN Book of short papers
+2023”, Pearson, pp. 611-616, ISBN 9788891935618AAVV
