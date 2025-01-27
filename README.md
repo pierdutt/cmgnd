@@ -34,14 +34,16 @@ constraints to be applied globally or to specific subpartitions of
 mixture components, thereby reducing model complexity and improving
 estimation performance.
 
+Some References
+
 Duttilo, P. (2024). Modelling financial returns with mixtures of
 generalized normal distributions. PhD Thesis, University “G. d’Annunzio”
 of Chieti-Pescara, pp. 1-166,
-<https://doi.org/10.48550/arXiv.2411.11847>
+[arXiv:2411.11847](https://doi.org/10.48550/arXiv.2411.11847)
 
 Duttilo, P. and Gattone, S.A. (2024). Enhancing parameter estimation in
 finite mixture of generalized normal distributions. pp. 1-26,
-<https://doi.org/10.48550/arXiv.2410.21559>
+[arXiv:2410.21559](https://doi.org/10.48550/arXiv.2410.21559)
 
 Duttilo, P., Kume A. and Gattone, S.A. (2023). Constrained Mixtures of
 Generalized Normal Distributions. In: “SEAS IN Book of short papers
