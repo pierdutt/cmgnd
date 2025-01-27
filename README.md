@@ -28,7 +28,7 @@ devtools::install_github("pierdutt/cmgnd")
 
 <div style="text-align: justify;">
 
-cmgnd is an R package designed to analyse univariate data with complex
+is an R package designed to analyse univariate data with complex
 patterns, including asymmetry, multi-modality, leptokurtosis, and heavy
 tails. The package implements the univariate constrained mixture of
 generalized normal distributions (CMGND) model, allowing parameter
