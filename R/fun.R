@@ -458,7 +458,9 @@ log.likelihood <- function(x, pi, mu, sigma, nu) {
   return(ll)
 }
 
-
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(c("..density.."))
+}
 
 
 
