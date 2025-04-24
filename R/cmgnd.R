@@ -30,16 +30,16 @@
 #' Default is \code{FALSE}.
 #' @param laplace A logical value indicating if the algorithm should use the Laplace distribution.
 #' Default is \code{FALSE}.
-#' @param grid A numeric vector specifying the step-lengths that determine the largest increase in the \eqn{Q(\theta, \theta(m-1))}
-#' function for the shape parameter. The default value is 1, but based on simulations, 0.2 is a suitable value.
-#' @param inversenu A logical value indicating if the algorithm should use an adaptive step size for the shape parameter.
-#' Default is \code{TRUE} to control the degeneracy of the shape parameter.
 #' @param scale A logical value indicating whether the function should scale the data. Default is \code{TRUE}.
 #' @param eps A numeric value specifying the tolerance level of the ECM algorithm.
 #' @param maxit An integer specifying the maximum number of iterations.
 #' @param verbose A logical value indicating whether to display running output. Default is \code{TRUE}.
 #' @param sigbound A numeric vector of length two specifying the lower and upper bounds for resetting the sigma estimates.
 #' Default value is \code{c(.01,5)}.
+#' @param sr A character string specifying the type of convergence criterion to use.
+#' The default is \code{"parameter"}, but \code{"like"} can be used for likelihood-based convergence.
+#' @param eta A numeric value specifying the tolerance level for the likelihood-based convergence.
+#' Default value is \code{.5}.
 #' @details
 #' The constrained mixture of generalized normal distributions (CMGND) model is an advanced statistical tool designed for
 #' analyzing univariate data characterized by non-normal features such as asymmetry, multi-modality,
@@ -125,10 +125,12 @@
 #' parameter estimation of finite mixed generalized normal distribution. Communications in
 #' Statistics - Simulation and Computation, 51(7):3596–3620
 #' @export
-cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 10,
+cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
-                  laplace = FALSE, grid = 1, inversenu = TRUE, scale = FALSE,
-                  eps = 10^-4, maxit = 999, verbose = TRUE, sigbound = c(.01, 5)) {
+                  laplace = FALSE, scale = FALSE,eps = 10^-4, maxit = 999, verbose = TRUE,
+                  sigbound = c(.1, 5), sr = "like",eta=0.5) {
+
+  grid=1
   # scale
   if (scale == TRUE) {
     x <- scale(x)
@@ -141,7 +143,7 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
   sigma_new <- matrix(NA, nrow = 1, ncol = K)
   nu_new <- matrix(NA, nrow = 1, ncol = K)
 
-  sigdata <- stats::sd(x)
+  sigdata <- stats::sd(x)/((gamma(3/3)/gamma(1/3)))^0.5
   # starting point k-means
   set.seed(41895160)
   rob <- stats::kmeans(x, K, nstart = 10)
@@ -167,7 +169,6 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
     init <- numeric(n_perm)
     end <- numeric(n_perm)
   }
-
 
   for (n in 1:n_perm) {
     # print(n)
@@ -236,65 +237,67 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
       # posterior probabilities initialization
       res <- responsibilities(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
       counter <- 0
-      estold <- matrix(c(pi_new, mu_new, sigma_new), nrow = K)
+      estold <- matrix(c(pi_new, mu_new, sigma_new,nu_new), nrow = K)
 
       # start cycle while
-      check <- rep(0, 2)
-      while (sum(check) < 2) {
+
+      check=0
+      Ks=length(which(Cnu == 1))
+      fds=100
+      fd=rep(100,K)
+      nu_check=rep(0,K)
+      ind_cr_nu <- which(Cnu == 0)
+      ind_s <- which(Cnu==1)
+      ind_cr_mu <- which(Cmu == 0)
+      ind_cr_sigma <- which(Csigma == 0)
+      nuj=NA
+      while (check<1) {
         it <- it + 1
         # update of the of the location parameter
-        ls_ll_old_mu <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+        if(sr=="like"){
+          ll_old_mu <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+        }
         if (any(Cmu == 1) & any(Cmu == 0)) {
-          ind_cr <- which(Cmu == 0)
           mu_update_j <- NA
-          for (k in ind_cr) {
-            mu_update_j <- ls_mu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, grid, it)
+          for (k in ind_cr_mu) {
+            mu_update_j <- ls_mu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K)
           }
-          mu_update_s <- ls_mu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, grid, Cmu)[1]
+          mu_update_s <- ls_mu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cmu)[1]
           mu_new <- (mu_update_s * Cmu) + (mu_update_j * +(!Cmu))
         } else if (all(Cmu == 1)) {
-          mu_new <- ls_mu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, grid, Cmu)
+          mu_new <- ls_mu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cmu)
         } else {
           for (k in 1:K) {
-            mu_new[k] <- ls_mu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, grid, it)
+            mu_new[k] <- ls_mu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K)
           }
         }
-        ls_ll_new_mu <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
-        if ((ls_ll_new_mu - ls_ll_old_mu) < eps) {
-          check[1] <- 1
-        }
-        if ((ls_ll_new_mu - ls_ll_old_mu) > eps) {
-          check[1] <- 0
-        }
-        # update of the scale parameter
-        ls_ll_old_sigma <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
         if (any(Csigma == 1) & any(Csigma == 0)) {
-          ind_cr <- which(Csigma == 0)
           sigma_update_j <- NA
-          for (k in ind_cr) {
+          for (k in ind_cr_sigma) {
             sigma_update_j <- sigma_j(x, res[, k], mu_new[k], nu_new[k], sigdata, sigbound)
           }
           sigma_update_s <- ls_sigma_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, grid, sigdata, sigbound, Csigma)[1]
           sigma_new <- (sigma_update_s * Csigma) + (sigma_update_j * +(!Csigma))
         } else if (all(Csigma == 1)) {
           sigma_update_s <- ls_sigma_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, grid, sigdata, sigbound, Csigma)[1]
-          sigma_new <- rep(sigma_update_s, K)
+          sigma_new <- rep(sigma_update_s,K)
         } else {
           for (k in 1:K) {
             sigma_new[k] <- sigma_j(x, cbind(res[, k]), mu_new[k], nu_new[k], sigdata, sigbound)
           }
         }
-        ls_ll_new_sigma <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
-        if ((ls_ll_new_sigma - ls_ll_old_sigma) < eps) {
-          check[2] <- 1
-        }
-        if ((ls_ll_new_sigma - ls_ll_old_sigma) > eps) {
-          check[2] <- 0
+        if(sr=="like"){
+          ll_new_sigma <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+          if(sum(nu_check>0)==K){
+            if((ll_new_sigma-ll_old_mu)<eps){check=1}
+            if((ll_new_sigma-ll_old_mu)>eps){check=1}
+          }
         }
         # update of the shape parameter
         if (gauss == TRUE) {
           for (k in 1:K) {
             nu_new[k] <- 2
+            nu_check=rep(2,K)
           }
         } else if (laplace == TRUE) {
           for (k in 1:K) {
@@ -302,18 +305,63 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
           }
         } else {
           if (any(Cnu == 1) & any(Cnu == 0)) {
-            ind_cr <- which(Cnu == 0)
+            #unconstrained nu
             nu_update_j <- NA
-            for (k in ind_cr) {
-              nu_update_j <- ls_nu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, inversenu, grid, it)
+            for (k in ind_cr_nu) {
+              if(sr=="like"){
+                if(abs(fd[k])< eta){nu_check[k]=1}else{
+                  nu_check[k]=0
+                  nu_update_j <- ls_nu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, sr)
+                  nuj<-nu_update_j
+                }
+                #derivative check
+                fd[k]=firstderivative(x,res[,k],mu_new[k],sigma_new[k],nu_new[k])
+              }else if(sr=="parameters"){
+                nu_update_j <- ls_nu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, sr)
+                nuj<-nu_update_j
+              }
             }
-            nu_update_s <- ls_nu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, inversenu, grid, Cnu)[1]
-            nu_new <- (nu_update_s * Cnu) + (nu_update_j * +(!Cnu))
+            #constrained nu
+            if(sr=="like"){
+              if(abs(fds)<eta){nu_check[ind_s]=1}else{
+                nu_check[ind_s]=0
+                nu_update_s <- ls_nu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cnu,sr)
+              }
+            }else if(sr=="parameters"){
+              nu_update_s <- ls_nu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cnu,sr)
+            }
+            #merge estimates
+
+            nu_new <- (nu_update_s * Cnu) + (nuj * +(!Cnu))
+            zs=res[, ind_s]
+            mus=mu_new[ind_s]
+            sigmas=sigma_new[ind_s]
+            nus=nu_new[ind_s]
+            fds<-firstderivative_s(x,Ks,zs,mus,sigmas,nus)
           } else if (all(Cnu == 1)) {
-            nu_new <- ls_nu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, inversenu, grid, Cnu)
+            if(sr=="like"){
+              if(abs(fds)<eta){nu_check[ind_s]=1}else{
+                nu_check[ind_s]=0
+                nu_new <- ls_nu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cnu,sr)}
+              zs=res[, ind_s]
+              mus=mu_new[ind_s]
+              sigmas=sigma_new[ind_s]
+              nus=nu_new[ind_s]
+              fds<-firstderivative_s(x,Ks,zs,mus,sigmas,nus)
+            }else if(sr=="parameters"){
+              nu_new <- ls_nu_s(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cnu,sr)
+            }
           } else {
             for (k in 1:K) {
-              nu_new[k] <- ls_nu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, inversenu, grid, it)
+              fd[k]=firstderivative(x,res[,k],mu_new[k],sigma_new[k],nu_new[k])
+              if(sr=="like"){
+                if(abs(fd[k])< eta){nu_check[k]=1}else{nu_check[k]=0}
+                if(nu_check[k]==0){
+                  nu_new[k] <- ls_nu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, sr)
+                }
+              }else if(sr=="parameters"){
+                nu_new[k] <- ls_nu_j(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, sr)
+              }
             }
           }
         }
@@ -325,8 +373,22 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
         # log-likelihood
         ll_new <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
         #
+        if (sr == "like"){
+          dif <- abs(ll_new - ll_old)
+          ll_old <- ll_new
+        }else if(sr=="parameters"){
+          estnew <- matrix(c(pi_new, mu_new, sigma_new,nu_new), nrow = K)
+          dif <- sum((estnew - estold)^2)
+          estold <- estnew
+          if(dif<eps){check=1}
+        }
         if (it > maxit) {
-          # print("max iteration")
+          #dif <- 0
+          check=1
+          nu_check=rep(1,K)
+          print("max iteration")
+          estnew <- matrix(c(pi_new, mu_new, sigma_new,nu_new), nrow = K)
+          print(estnew)
         }
       } # end while cycle
       if (ll_new > ll_optim) {
@@ -359,10 +421,10 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
   }
 
   # save
-  mu_new <- c(op$mu)
-  sigma_new <- c(op$sigma)
-  nu_new <- c(op$nu)
-  pi_new <- c(op$pi)
+  mu_new <- op$mu
+  sigma_new <- op$sigma
+  nu_new <- op$nu
+  pi_new <- op$pi
   parameters <- pframe(pi_new, mu_new, sigma_new, nu_new)
   res <- responsibilities(x, pi_new, mu_new, sigma_new, nu_new)
 
@@ -423,17 +485,14 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
   if (scale == TRUE) {
     info <- list(
       constraints = constraints, gnd = gnd, gauss = gauss, laplace = laplace, scalemeans = attr(x, "scaled:center"),
-      scalesd = attr(x, "scaled:scale"), grid = grid, inversenu = inversenu
-    )
+      scalesd = attr(x, "scaled:scale"), grid = grid)
   } else {
     info <- list(
       constraints = constraints, gnd = gnd, gauss = gauss, laplace = laplace,
-      scalemeans = NULL, scalesd = NULL, grid = grid, inversenu = inversenu
-    )
+      scalemeans = NULL, scalesd = NULL, grid = grid)
   }
 
-  return(list(
-    ll = ll_optim, nobs = N, npar = npar, parameters = parameters,
-    ic = ic, res = res, clus = clus, op_it = op_it, cputime = time, info = info
+  return(list(ll = ll_optim, nobs = N, npar = npar, parameters = parameters,
+              ic = ic, res = res, clus = clus, op_it = op_it, cputime = time, info = info
   ))
 }

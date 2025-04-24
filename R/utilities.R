@@ -2,8 +2,7 @@
 #'
 #' Density function for the GND with location parameter \code{mu},
 #' scale parameter \code{sigma} and shape parameter \code{nu}.
-#'
-#' @inheritParams cmgnd
+#' @param x A numeric vector of observations.
 #' @param mu A numeric value indicating the location parameter \eqn{\mu}.
 #' @param sigma A numeric value indicating the scale parameter \eqn{\sigma}.
 #' @param nu A numeric value indicating the shape parameter \eqn{\nu}.
@@ -45,6 +44,7 @@ dgnd <- function(x, mu = 0, sigma = 1, nu = 2) {
 #' The function computes the marginal density based on the provided parameters of the CMGND model.
 #' It can handle both newly supplied parameters or those extracted from an existing CMGND model object.
 #'
+#' @seealso `cmgnd()` for estimating the model parameters.
 #'
 #' @export
 dcmgnd <- function(x, parameters) {
@@ -60,6 +60,7 @@ dcmgnd <- function(x, parameters) {
   }
   return(rowSums(den))
 }
+
 
 
 
@@ -114,33 +115,180 @@ sim_cmgnd <- function(n = 1000, pi = rep(0.5, 2), mu = c(1, 5), sigma = c(1, 1),
 #' The function plots the overall (marginal) density curve for the CMGND model, as well as the density curves of each mixture component.
 #' This visualization helps in understanding how each component contributes to the model and provides insights into the data distribution.
 #'
+#' @seealso `cmgnd()` for estimating the model parameters.
 #'
 #' @export
-plot_cmgnd <- function(x, parameters) {
+plot_cmgnd <- function(x, parameters,model) {
   if (any(class(parameters) == "list")) {
     parameters <- parameters$parameters
   } else {
     parameters <- parameters
   }
-  n <- length(x)
+
+  # Calculate the range of the x values
+  x_range <- range(x)
+
+  # Extend the range by 5 units in both directions
+  x_extended_inf <- seq(x_range[1] - 5, x_range[1], length.out = 100)  # Extend lower bound
+  x_extended_sup <- seq(x_range[2], x_range[2] + 5, length.out = 100)  # Extend upper bound
+
+  # Combine the original x with the extended values
+  x_full_range <- c(x_extended_inf, x, x_extended_sup)
+
+  n <- length(x_full_range)
   K <- nrow(parameters)
   ind1 <- components <- list()
+
+  # Compute the components (density functions) over the combined x values
   for (k in 1:K) {
     ind1[[k]] <- rep(k, n)
-    components[[k]] <- gnorm::dgnorm(x, parameters[k, 2], parameters[k, 3], parameters[k, 4]) * parameters[k, 1]
+    components[[k]] <- gnorm::dgnorm(x_full_range, parameters[k, 2], parameters[k, 3], parameters[k, 4]) * parameters[k, 1]
   }
+
   ind1 <- rapply(ind1, as.character, how = "replace")
-  ind1[[K + 1]] <- rep("Marginal", n)
-  components[[K + 1]] <- dcmgnd(x, parameters)
+  ind1[[K+1]] <- rep("Marginal", n)
+  components[[K+1]] <- dcmgnd(x_full_range, parameters)
   components <- purrr::list_c(components)
   ind1 <- purrr::list_c(ind1)
-  df <- data.frame(x, components, ind1)
+
+  # Now create the data frame with combined x values for plotting
+  df <- data.frame(x = x_full_range, components, ind1)
   df$ind1 <- factor(df$ind1, levels = c("Marginal", as.character(c(1:K))))
+
+  # Plot the density functions over the combined x values
   plot.cmgnd <- ggplot2::ggplot(data = df, ggplot2::aes(x = x, y = components, group = ind1)) +
     ggplot2::geom_line(ggplot2::aes(linetype = ind1, color = ind1)) +
     ggplot2::labs(x = "Data", y = "Density") +
     ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = "top", legend.title = ggplot2::element_blank())
+    ggplot2::theme(legend.position = "top", legend.title = ggplot2::element_blank())+
+    ggplot2::ggtitle(model)
   return(plot.cmgnd)
 }
 
+#' Plot Marginal and Mixture Component Densities of the CMGND Model
+#'
+#' @description
+#' This function generates a plot displaying both the marginal density and individual mixture
+#' component densities for univariate constrained mixture of generalized normal distribution (CMGND) models.
+#' It visually represents how the different components of the mixture model contribute to the overall density.
+#'
+#' @param x A numeric vector representing the observed data points.
+#' @param parameters A matrix or data.frame containing the parameters of the CMGND model.
+#' @param binwidth Number of bins. Defaults to 80.
+#' Alternatively, this can be an object returned from the `cmgnd()` function, representing an estimated CMGND model.
+#'
+#' @return A plot illustrating the marginal density along with the densities of the individual mixture components for the given data `x`.
+#'
+#' @details
+#' The function plots the overall (marginal) density curve for the CMGND model, as well as the density curves of each mixture component.
+#' This visualization helps in understanding how each component contributes to the model and provides insights into the data distribution.
+#'
+#' @seealso `cmgnd()` for estimating the model parameters.
+#'
+#' @export
+hist_cmgnd <- function(x, parameters, bins = 80) {
+  if (any(class(parameters) == "list")) {
+    parameters <- parameters$parameters
+  } else {
+    parameters <- parameters
+  }
+
+  # Calculate the range of the x values
+  x_range <- range(x)
+
+  # Extend the range by 5 units in both directions
+  x_extended_inf <- seq(x_range[1] - 5, x_range[1], length.out = 100)  # Extend lower bound
+  x_extended_sup <- seq(x_range[2], x_range[2] + 5, length.out = 100)  # Extend upper bound
+
+  # Combine the original x with the extended values
+  x_full_range <- c(x_extended_inf, x, x_extended_sup)
+
+  n <- length(x_full_range)
+  K <- nrow(parameters)
+  ind1 <- components <- list()
+
+  # Compute the components (density functions) over the combined x values
+  for (k in 1:K) {
+    ind1[[k]] <- rep(k, n)
+    components[[k]] <- gnorm::dgnorm(x_full_range, parameters[k, 2], parameters[k, 3], parameters[k, 4]) * parameters[k, 1]
+  }
+
+  ind1 <- rapply(ind1, as.character, how = "replace")
+  ind1[[K+1]] <- rep("Marginal", n)
+  components[[K+1]] <- dcmgnd(x_full_range, parameters)
+  components <- purrr::list_c(components)
+  ind1 <- purrr::list_c(ind1)
+
+  # Now create the data frame with combined x values for plotting
+  df <- data.frame(x = x_full_range, components, ind1)
+  df$ind1 <- factor(df$ind1, levels = c("Marginal", as.character(c(1:K))))
+
+  # Plot the density functions over the combined x values with a semi-transparent histogram
+  plot.cmgnd <- ggplot2::ggplot() +
+    ggplot2::geom_histogram(data = data.frame(x = x), ggplot2::aes(x = x, y = ..density..),
+                            bins = bins, fill = "grey70", color = "grey50", alpha = 0.4) +
+    ggplot2::geom_line(data = df, ggplot2::aes(x = x, y = components, linetype = ind1, color = ind1), size = 1) +
+    ggplot2::labs(x = "Data", y = "Density") +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "top", legend.title = ggplot2::element_blank())
+
+  return(plot.cmgnd)
+}
+
+
+# simulation routine
+CS_Psimrun=function(nc,nsim,nstart,par_comp,N,sigbound,sr,eta){
+  library(parallel)
+  par=matrix(c(par_comp[1],par_comp[2],par_comp[3],par_comp[4],par_comp[5],par_comp[6],par_comp[7],par_comp[8])
+             ,nrow=2,ncol=4)
+  res=vector("list")
+  res=matrix(NA,nrow=2,ncol=4)
+  dimnames(res)=list(c("c1","c2"),c("pi","mu","sigma","nu"))
+  K=2
+  cl <- makeCluster(nc)
+  ressim <- parLapply(cl,1:nsim,CS_Psim,N,par,nstart,K,res,sigbound,sr,eta)
+}
+#
+CS_Psim=function(i,N,par,nstart,K,res,sigbound,sr,eta){
+  source("mgnd_functions.R")
+  set.seed(i)
+  x=sim_cmgnd(n=N,pi=par[c(1,2)],mu=par[c(3,4)],sigma=par[c(5,6)],nu=par[c(7,8)])
+
+  if(any(abs(c(max(scale(x$sim_data)),min(scale(x$sim_data))))>9)){
+    set.seed(i+1000)
+    x=sim_cmgnd(n=N,pi=par[c(1,2)],mu=par[c(3,4)],sigma=par[c(5,6)],nu=par[c(7,8)])
+  }
+  #estimation
+  estimation=cmgnd(x$sim_data,K,Cmu = rep(0, K),Csigma = rep(0, K), Cnu = rep(0, K),
+                   nstart = nstart,  theta = FALSE,nustart = rep(2, K),
+                   nustartype = "random",gauss = FALSE,  laplace = FALSE,
+                   scale = FALSE,  eps = 10^-4,
+                   maxit = 999,  verbose = TRUE,sigbound,sr,eta)
+  est=estimation$parameters
+  if(which.min(c(sqrt(sum((par-est)^2)),sqrt(sum((par-est[c(2,1),])^2))))==2){est=est[c(2,1),]}
+  res=as.matrix(est)
+  return(list(theta_true=par,tcm=x$sim_clus,clus=estimation$clus,res=res,op_it=estimation$op_it))
+}
+#
+recoveryoutput=function(resPsim,par){
+  library(mclust)
+  # define objects
+  S=length(resPsim)
+  res=array(NA,dim=c(2,4,S),dimnames=list(c("c1","c2"),c("pi","mu","sigma","nu")))
+  # mean and mse computation and output recovery
+  invnu=0
+  MSEinvnu=0
+  for(i in 1:nsim){
+    # simulation run estimates
+    res[,,i]=resPsim[[i]]$res
+    # mean and mse
+    invnu=invnu+resPsim[[i]]$res
+    MSEinvnu=MSEinvnu+(resPsim[[i]]$res-resPsim[[i]]$theta_true )^2
+  }
+
+  means_invnu=invnu/nsim
+  MSE_invnu=sqrt(MSEinvnu/nsim)
+  means=means_invnu
+  MSE=MSE_invnu
+  return(list(theta_true=par,res=res,means=means,MSE=MSE))
+}
