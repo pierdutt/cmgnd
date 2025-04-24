@@ -107,7 +107,7 @@ sim_cmgnd <- function(n = 1000, pi = rep(0.5, 2), mu = c(1, 5), sigma = c(1, 1),
 #'
 #' @param x A numeric vector representing the observed data points.
 #' @param parameters A matrix or data.frame containing the parameters of the CMGND model.
-#' @param model A character indicating the model type name.
+#' @param model A character indicating the model type name. Default value model="".
 #' Alternatively, this can be an object returned from the `cmgnd()` function, representing an estimated CMGND model.
 #'
 #' @return A plot illustrating the marginal density along with the densities of the individual mixture components for the given data `x`.
@@ -119,7 +119,7 @@ sim_cmgnd <- function(n = 1000, pi = rep(0.5, 2), mu = c(1, 5), sigma = c(1, 1),
 #' @seealso `cmgnd()` for estimating the model parameters.
 #'
 #' @export
-plot_cmgnd <- function(x, parameters, model) {
+plot_cmgnd <- function(x, parameters, model="") {
   if (any(class(parameters) == "list")) {
     parameters <- parameters$parameters
   } else {
