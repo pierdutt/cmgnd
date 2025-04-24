@@ -1,7 +1,7 @@
 Package: cmgnd
 Type: Package
 Title: Constrained Mixture of Generalized Normal Distributions
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     c(person("Pierdomenico", "Duttilo", , "pierdomenico.duttilo@unipd.it", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2036-7163")), 
