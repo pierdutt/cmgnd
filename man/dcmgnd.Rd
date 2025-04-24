@@ -23,3 +23,6 @@ mixture of generalized normal distribution (CMGND) models.
 The function computes the marginal density based on the provided parameters of the CMGND model.
 It can handle both newly supplied parameters or those extracted from an existing CMGND model object.
 }
+\seealso{
+`cmgnd()` for estimating the model parameters.
+}

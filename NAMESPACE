@@ -3,5 +3,6 @@
 export(cmgnd)
 export(dcmgnd)
 export(dgnd)
+export(hist_cmgnd)
 export(plot_cmgnd)
 export(sim_cmgnd)

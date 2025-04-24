@@ -10,19 +10,19 @@ cmgnd(
   Cmu = rep(0, K),
   Csigma = rep(0, K),
   Cnu = rep(0, K),
-  nstart = 10,
+  nstart = 50,
   theta = FALSE,
   nustart = rep(2, K),
   nustartype = "random",
   gauss = FALSE,
   laplace = FALSE,
-  grid = 1,
-  inversenu = TRUE,
   scale = FALSE,
   eps = 10^-4,
   maxit = 999,
   verbose = TRUE,
-  sigbound = c(0.01, 5)
+  sigbound = c(0.1, 5),
+  sr = "like",
+  eta = 0.5
 )
 }
 \arguments{
@@ -63,12 +63,6 @@ Default is \code{FALSE}.}
 \item{laplace}{A logical value indicating if the algorithm should use the Laplace distribution.
 Default is \code{FALSE}.}
 
-\item{grid}{A numeric vector specifying the step-lengths that determine the largest increase in the \eqn{Q(\theta, \theta(m-1))}
-function for the shape parameter. The default value is 1, but based on simulations, 0.2 is a suitable value.}
-
-\item{inversenu}{A logical value indicating if the algorithm should use an adaptive step size for the shape parameter.
-Default is \code{TRUE} to control the degeneracy of the shape parameter.}
-
 \item{scale}{A logical value indicating whether the function should scale the data. Default is \code{TRUE}.}
 
 \item{eps}{A numeric value specifying the tolerance level of the ECM algorithm.}
@@ -79,6 +73,12 @@ Default is \code{TRUE} to control the degeneracy of the shape parameter.}
 
 \item{sigbound}{A numeric vector of length two specifying the lower and upper bounds for resetting the sigma estimates.
 Default value is \code{c(.01,5)}.}
+
+\item{sr}{A character string specifying the type of convergence criterion to use.
+The default is \code{"parameter"}, but \code{"like"} can be used for likelihood-based convergence.}
+
+\item{eta}{A numeric value specifying the tolerance level for the likelihood-based convergence.
+Default value is \code{.5}.}
 }
 \value{
 \item{\code{ll}}{The log-likelihood corresponding to the estimated model.}
