@@ -9,7 +9,9 @@ plot_cmgnd(x, parameters, model)
 \arguments{
 \item{x}{A numeric vector representing the observed data points.}
 
-\item{parameters}{A matrix or data.frame containing the parameters of the CMGND model.
+\item{parameters}{A matrix or data.frame containing the parameters of the CMGND model.}
+
+\item{model}{A character indicating the model type name.
 Alternatively, this can be an object returned from the `cmgnd()` function, representing an estimated CMGND model.}
 }
 \value{

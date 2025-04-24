@@ -11,7 +11,7 @@ hist_cmgnd(x, parameters, bins = 80)
 
 \item{parameters}{A matrix or data.frame containing the parameters of the CMGND model.}
 
-\item{binwidth}{Number of bins. Defaults to 80.
+\item{bins}{Number of bins. Defaults to 80.
 Alternatively, this can be an object returned from the `cmgnd()` function, representing an estimated CMGND model.}
 }
 \value{
