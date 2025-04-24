@@ -188,10 +188,6 @@ plot_cmgnd <- function(x, parameters, model) {
 #'
 #' @export
 hist_cmgnd <- function(x, parameters, bins = 80) {
-  if (getRversion() >= "2.15.1") {
-    utils::globalVariables(c('..density..'))
-  }
-
   if (any(class(parameters) == "list")) {
     parameters <- parameters$parameters
   } else {
