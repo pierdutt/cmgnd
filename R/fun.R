@@ -1,10 +1,10 @@
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("
-  #   ____  __  ___   ____   _   _  ____
-  #  / ___|| \\/   | / ___| |\\ | ||  _ \
+  #   ______  ___   ____   _   _  ____
+  #  / ___|| \\/   | / ___| |\\ | ||  _ \\
   # | |    | |\\/| || |  __ | \\| || | | |
   # | |___ | |  | || |__| || |\\ || |_| |
-  # \\  ___||_|   |_| \\ ___||_| \\||____/
+  # \\  ___||_| |_| \\ ___||_| \\||____/
   #
   #   CMGND: Constrained Mixture of Generalised Normal Distributions
   #   Type 'citation(\"cmgnd\")' to cite this package in publications.
