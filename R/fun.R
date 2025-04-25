@@ -3,8 +3,8 @@
   #   ____  __  ___   ____   _   _  ____
   #  / ___|| \\/   | / ___| |\\ | ||  _ \
   # | |    | |\\/| || |  __ | \\| || | | |
-  # | |___ | |   | || |__| || |\\ || |_| |
-  # \\ ___||_|   |_| \\ ___||_| \\||____/
+  # | |___ | |  | || |__| || |\\ || |_| |
+  # \\  ___||_|   |_| \\ ___||_| \\||____/
   #
   #   CMGND: Constrained Mixture of Generalised Normal Distributions
   #   Type 'citation(\"cmgnd\")' to cite this package in publications.
