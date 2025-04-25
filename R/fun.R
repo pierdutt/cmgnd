@@ -4,7 +4,7 @@
   #  / ___|| \\/   | / ___| |\\ | ||  _ \\
   # | |    | |\\/| || |  __ | \\| || | | |
   # | |___ | |  | || |__| || |\\ || |_| |
-  # \\  ___||_|  |_| \\ ____||_| \\||____/
+  # \\ ____||_|  |_| \\ ____||_| \\||____/
   #
   #   CMGND: Constrained Mixture of Generalised Normal Distributions
   #   Type 'citation(\"cmgnd\")' to cite this package in publications.
