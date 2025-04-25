@@ -1,3 +1,18 @@
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage("
+  #   ____  __   __   ____   _    _  ____
+  #  / ___||  \\/  | / ___| | \\ | ||  _ \
+  # | |    | |\\/| || |  __ |  \\| || | | |
+  # | |___ | |   | || |__| || |\\  || |_| |
+  #  \____||_|   |_| \_____||_| \\_||____/
+  #
+  #   CMGND: Constrained Mixture of Generalised Normal Distributions
+  #   Type 'citation(\"cmgnd\")' to cite this package in publications.
+  #   Version 0.1.1
+  ")
+}
+
+
 #' pframe
 #'
 #' pframe
