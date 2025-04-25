@@ -6,8 +6,7 @@
   # | |___ | |  | || |__| || |\\ || |_| |
   # \\ ____||_|  |_| \\ ____||_| \\||____/
   #
-  #   CMGND: Constrained Mixture of Generalised Normal Distributions
-  #   Type 'citation(\"cmgnd\")' to cite this package in publications.
+  #   cmgnd: constrained mixture of generalised normal distributions
   #   Version 0.1.1
   ")
 }
