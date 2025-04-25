@@ -236,4 +236,75 @@ hist_cmgnd <- function(x, parameters, bins = 80) {
   return(plot.cmgnd)
 }
 
+#' Compute the First Four Moments of the CMGND Marginal Distribution
+#'
+#' @description
+#' Computes the mean, variance, skewness, and kurtosis of the marginal distribution
+#' of a univariate Constrained Mixture of Generalized Normal Distributions (CMGND) model,
+#' given the model parameters.
+#'
+#' @param parameters A matrix or data frame where each row corresponds to a component
+#' of the mixture. Columns must be ordered as follows:
+#' \describe{
+#'   \item{1}{Mixing proportions \eqn{\pi_k}}
+#'   \item{2}{Component means \eqn{\mu_k}}
+#'   \item{3}{Scale parameters \eqn{\sigma_k}}
+#'   \item{4}{Shape parameters \eqn{\nu_k}}
+#' }
+#'
+#' @return A named list with the following elements:
+#' \describe{
+#'   \item{mean}{The marginal mean of the CMGND distribution}
+#'   \item{var}{The marginal variance}
+#'   \item{skew}{The marginal skewness}
+#'   \item{kur}{The marginal kurtosis}
+#' }
+#'
+#' @details
+#' The function assumes that the parameters define a valid CMGND model and uses
+#' analytical expressions to compute the first four moments of the marginal distribution.
+#' The shape parameter \eqn{\nu_k} governs the kurtosis of each component.
+#'
+#' @seealso \code{\link{cmgnd}} for estimating CMGND model parameters.
+#'
+#' @export
+moments_cmgnd=function(parameters){
+  pi=parameters[,1]
+  mu=parameters[,2]
+  sigma=parameters[,3]
+  nu=parameters[,4]
+  K=length(pi)
+  # Mean(X)
+  m0=sum(pi * mu)
+  # Variance(X)
+  k.var=rep(NA, K)
+  for (k in 1:K) {
+    k.var[k]=(((sigma[k]^2)*gamma(3/nu[k]))/(gamma(1/nu[k])))
+  }
+  K=length(pi)
+  A=B=C=rep(NA,K)
+  for (k in 1:K) {
+    A[k]=pi[k]*k.var[k]
+    B[k]=pi[k]*mu[k]^2
+    C[k]=pi[k]*mu[k]
+  }
+  var=sum(A)+sum(B)-sum(C)^2
+  # Skewness(X)
+  num=den=rep(NA,K)
+  for (k in 1:K) {
+    num[k]=pi[k]*(((mu[k]-m0)^3)+(3*((mu[k]-m0))*(((sigma[k]^2)*gamma(3/nu[k]))/(gamma(1/nu[k])))))
+    den[k]=(pi[k]*(((mu[k]-m0)^2)+(((sigma[k]^2)*gamma(3/nu[k]))/(gamma(1/nu[k])))))
+  }
+  skew=((sum(num)/sum(den)^1.5))
+  # Kurtosis(X)
+  num=den=rep(NA,K)
+  for (k in 1:K) {
+    num[k]=pi[k]*(((mu[k]-m0)^3)+(6*((mu[k]-m0)^2)*(((sigma[k]^2)*gamma(3/nu[k]))/(gamma(1/nu[k])))+
+                                    (((sigma[k]^4)*gamma(5/nu[k]))/(gamma(1/nu[k])))))
+    den[k]=(pi[k]*(((mu[k]-m0)^2)+(((sigma[k]^2)*gamma(3/nu[k]))/(gamma(1/nu[k])))))
+  }
+  kur=(sum(num)/sum(den)^2)
+  return(list(mean=m0,var=var,skew=skew,kur=kur))
+}
+
 
