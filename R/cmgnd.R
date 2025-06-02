@@ -105,6 +105,10 @@
 #' parameter estimation of finite mixed generalized normal distribution. Communications in
 #' Statistics - Simulation and Computation, 51(7), pp 3596–3620.
 #'
+#' Duttilo, P., Kume A., and Gattone, S.A. (2023). Constrained Mixtures of Generalized
+#' Normal Distributions. In: “SEAS IN Book of short papers 2023”, Pearson, pp.
+#' 611-616, ISBN 9788891935618AAVV
+#'
 #' Duttilo, P. (2024). Modelling finacial returns with mixture of
 #' generalized normal distributions. Phd thesis, University "G.
 #' d’Annunzio" of Chieti-Pescara, Pescara, IT, pp 1-166. Available
@@ -120,9 +124,6 @@
 #' of generalized normal distributions. Computational Statistics, pp. 1-28
 #' \url{https://doi.org/10.1007/s00180-025-01638-x}
 #'
-#' Duttilo, P., Kume A., and Gattone, S.A. (2023). Constrained Mixtures of Generalized
-#' Normal Distributions. In: “SEAS IN Book of short papers 2023”, Pearson, pp.
-#' 611-616, ISBN 9788891935618AAVV
 #'
 #' @export
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,

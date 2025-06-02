@@ -152,6 +152,10 @@ Wen, L., Qiu, Y., Wang, M., Yin, J., and Chen, P. (2022). Numerical characterist
 parameter estimation of finite mixed generalized normal distribution. Communications in
 Statistics - Simulation and Computation, 51(7), pp 3596–3620.
 
+Duttilo, P., Kume A., and Gattone, S.A. (2023). Constrained Mixtures of Generalized
+Normal Distributions. In: “SEAS IN Book of short papers 2023”, Pearson, pp.
+611-616, ISBN 9788891935618AAVV
+
 Duttilo, P. (2024). Modelling finacial returns with mixture of
 generalized normal distributions. Phd thesis, University "G.
 d’Annunzio" of Chieti-Pescara, Pescara, IT, pp 1-166. Available
@@ -166,8 +170,4 @@ AStA Adv Stat Anal, pp. 1-21
 Duttilo, P. and Gattone, S. A. (2025). Enhancing parameter estimation in finite mixture
 of generalized normal distributions. Computational Statistics, pp. 1-28
 \url{https://doi.org/10.1007/s00180-025-01638-x}
-
-Duttilo, P., Kume A., and Gattone, S.A. (2023). Constrained Mixtures of Generalized
-Normal Distributions. In: “SEAS IN Book of short papers 2023”, Pearson, pp.
-611-616, ISBN 9788891935618AAVV
 }
