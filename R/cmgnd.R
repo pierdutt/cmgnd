@@ -123,6 +123,7 @@
 #' Duttilo, P., Kume A., and Gattone, S.A. (2023). Constrained Mixtures of Generalized
 #' Normal Distributions. In: “SEAS IN Book of short papers 2023”, Pearson, pp.
 #' 611-616, ISBN 9788891935618AAVV
+#'
 #' @export
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
