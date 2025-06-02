@@ -99,11 +99,11 @@
 #' @references
 #' Bazi, Y., Bruzzone, L., and Melgani, F. (2006). Image thresholding
 #' based on the em algorithm and the generalized gaussian distribution.
-#' Pattern Recognition, 40(2):619–634.
+#' Pattern Recognition, 40(2), pp 619–634.
 #'
 #' Wen, L., Qiu, Y., Wang, M., Yin, J., and Chen, P. (2022). Numerical characteristics and
 #' parameter estimation of finite mixed generalized normal distribution. Communications in
-#' Statistics - Simulation and Computation, 51(7):3596–3620
+#' Statistics - Simulation and Computation, 51(7), pp 3596–3620.
 #'
 #' Duttilo, P. (2024). Modelling finacial returns with mixture of
 #' generalized normal distributions. Phd thesis, University "G.
