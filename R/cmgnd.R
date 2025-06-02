@@ -37,7 +37,7 @@
 #' @param sigbound A numeric vector of length two specifying the lower and upper bounds for resetting the sigma estimates.
 #' Default value is \code{c(.01,5)}.
 #' @param sr A character string specifying the type of convergence criterion to use.
-#' The default is \code{"parameter"}, but \code{"like"} can be used for likelihood-based convergence.
+#' The default is \code{"like"}, but \code{"parameter"} can be used for likelihood-based convergence.
 #' @param eta A numeric value specifying the tolerance level for the likelihood-based convergence.
 #' Default value is \code{.5}.
 #' @details
@@ -101,10 +101,14 @@
 #' based on the em algorithm and the generalized gaussian distribution.
 #' Pattern Recognition, 40(2):619–634.
 #'
+#' Wen, L., Qiu, Y., Wang, M., Yin, J., and Chen, P. (2022). Numerical characteristics and
+#' parameter estimation of finite mixed generalized normal distribution. Communications in
+#' Statistics - Simulation and Computation, 51(7):3596–3620
+#'
 #' Duttilo, P. (2024). Modelling finacial returns with mixture of
 #' generalized normal distributions. Phd thesis, University "G.
 #' d’Annunzio" of Chieti-Pescara, Pescara, IT, pp 1-166. Available
-#' at \url{https://drive.google.com/file/d/16whH1O4pVeGu_VY2sN_SPDdbTZeE1jNI/view?usp=sharing}
+#' at \url{https://doi.org/10.48550/arXiv.2411.11847}
 #'
 #' Duttilo, P., Gattone, S.A., and Iannone, B. (2023). Mixtures
 #' of generalized normal distributions and EGARCH models to
@@ -112,18 +116,13 @@
 #' AStA Adv Stat Anal, pp. 1-21
 #' \url{https://doi.org/10.1007/s10182-023-00487-7}
 #'
-#' Duttilo, P., Gattone, S.A., and Kume, A. (2023). Mixtures of generalized normal
-#' distributions with constraints. In: “Programme and Abstracts 25th International
-#' Conference on Computational Statistics (COMPSTAT 2023)”, IASC, pp. 21, ISBN
-#' 9789073592414
+#' Duttilo, P. and Gattone, S. A. (2025). Enhancing parameter estimation in finite mixture
+#' of generalized normal distributions. Computational Statistics, pp. 1-28
+#' \url{https://doi.org/10.1007/s00180-025-01638-x}
 #'
 #' Duttilo, P., Kume A., and Gattone, S.A. (2023). Constrained Mixtures of Generalized
 #' Normal Distributions. In: “SEAS IN Book of short papers 2023”, Pearson, pp.
 #' 611-616, ISBN 9788891935618AAVV
-#'
-#' Wen, L., Qiu, Y., Wang, M., Yin, J., and Chen, P. (2022). Numerical characteristics and
-#' parameter estimation of finite mixed generalized normal distribution. Communications in
-#' Statistics - Simulation and Computation, 51(7):3596–3620
 #' @export
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
