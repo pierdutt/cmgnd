@@ -248,7 +248,7 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
         it <- it + 1
         # update of the of the location parameter
         if(sr=="like"){
-          ll_old_mu <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+          ll_old_mu <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
         }
         if (any(Cmu == 1) & any(Cmu == 0)) {
           mu_update_j <- NA
@@ -280,7 +280,7 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
           }
         }
         if(sr=="like"){
-          ll_new_sigma <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+          ll_new_sigma <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
           if(sum(nu_check>0)==K){
             if((ll_new_sigma-ll_old_mu)<eps){check=1}
             if((ll_new_sigma-ll_old_mu)>eps){check=1}
@@ -364,7 +364,7 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
         # update of the weights
         pi_new <- rbind(colSums(res) / N)
         # log-likelihood
-        ll_new <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+        ll_new <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
         #
         if (sr == "like"){
           dif <- abs(ll_new - ll_old)

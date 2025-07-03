@@ -85,9 +85,9 @@ mu_j <- function(x, z, mu, nu) {
 #' @noRd
 ls_mu_j <- function(x, pi_new, mu_new, sigma_new, nu_new, res, k, K) {
   mu_temp <- mu_new
-  ll_mu_old <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ll_mu_old <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
   mu_temp[k] <- mu_j(x, res[, k], mu_temp[k], nu_new[k])
-  ll_mu_new <- log.likelihood(x, rbind(pi_new), rbind(mu_temp), rbind(sigma_new), rbind(nu_new))
+  ll_mu_new <- log_likelihood(x, rbind(pi_new), rbind(mu_temp), rbind(sigma_new), rbind(nu_new))
   if (ll_mu_new>ll_mu_old) {
     mu_new[k] <- mu_temp[k]
   }
@@ -136,13 +136,13 @@ mu_s <- function(x, K, z, mu, nu) {
 #' @return \code{ls_mu_s} returns a numeric value indicating the updating for constrained location parameters \eqn{\mu_k = \mu_r} for all \eqn{k \in C_r}.
 #' @noRd
 ls_mu_s <- function(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cmu) {
-  ll_mu_old <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ll_mu_old <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
   mu_old <- mu_new
   mu_new[which(Cmu == 1)] <- mu_s(
     x, length(which(Cmu == 1)), res[, which(Cmu == 1)],
     mu_new[which(Cmu == 1)], nu_new[which(Cmu == 1)])
 
-  ll_mu_new <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ll_mu_new <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
 
   if (ll_mu_old > ll_mu_new) {
     mu_new <- mu_old
@@ -230,7 +230,7 @@ sigma_s <- function(x, K, z, mu, sigma, nu, ss, sigdata, sigbound) {
 #' @return \code{ls_sigma_s} returns a numeric value indicating the updating for constrained location parameters \eqn{\sigma_k = \sigma_r} for all \eqn{k \in C_r}.
 #' @noRd
 ls_sigma_s <- function(x, pi_new, mu_new, sigma_new, nu_new, K, res, grid, sigdata, sigbound, Csigma) {
-  ls_ll_old <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ls_ll_old <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
   sigma_old <- sigma_new
   G <- length(grid)
   lssigmasts <- matrix(NA, nrow = G, ncol = K)
@@ -245,7 +245,7 @@ ls_sigma_s <- function(x, pi_new, mu_new, sigma_new, nu_new, K, res, grid, sigda
 
     lssigmasts[i, which(Csigma == 0)] <- sigma_new[which(Csigma == 0)]
 
-    lsllsts[i] <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(lssigmasts[i, ]), rbind(nu_new))
+    lsllsts[i] <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(lssigmasts[i, ]), rbind(nu_new))
   }
 
 
@@ -327,10 +327,10 @@ firstderivative=function(x, z, mu, sigma, nu){
 #' @return \code{ls_nu_j} returns a numeric value indicating the updating for the uncontrained shape parameter \eqn{\nu_k}.
 #' @noRd
 ls_nu_j <- function(x, pi_new, mu_new, sigma_new, nu_new, res, k, K, sr) {
-  ll_nu_old <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ll_nu_old <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
   nu_old <- nu_new[k]
   nu_new[k] <- nu_j(x, res[,k], mu_new[k], sigma_new[k], nu_new[k], sr)
-  ll_nu_new <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ll_nu_new <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
   if (ll_nu_old > ll_nu_new) {
     #print("negative dif")
     nu_new[k] <- nu_old
@@ -406,12 +406,12 @@ firstderivative_s=function(x,K,z, mu, sigma, nu){
 #' @return \code{ls_nu_s} returns a numeric value indicating the updating for constrained shape parameters \eqn{\nu_k = \nu_r} for all \eqn{k \in C_r}.
 #' @noRd
 ls_nu_s <- function(x, pi_new, mu_new, sigma_new, nu_new, K, res, Cnu, sr) {
-  ll_nu_old <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ll_nu_old <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
   nu_old <- nu_new
   nu_new[ which(Cnu == 1)] <- nu_s(
     x, length(which(Cnu == 1)), res[, which(Cnu == 1)], mu_new[which(Cnu == 1)],
     sigma_new[which(Cnu == 1)], nu_new[which(Cnu == 1)],sr)
-  ll_nu_new <- log.likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
+  ll_nu_new <- log_likelihood(x, rbind(pi_new), rbind(mu_new), rbind(sigma_new), rbind(nu_new))
   if (ll_nu_old > ll_nu_new) {
     nu_new <- nu_old
   }
@@ -459,9 +459,8 @@ responsibilities <- function(x, pi, mu, sigma, nu) {
 #' @param sigma A numeric vector of the scale parameter \eqn{\sigma_k}.
 #' @param nu A numeric vector of the shape parameter \eqn{\nu_k}.
 #' @return \code{loglikelihood} returns the log-likelihood value.
-#' @export
-#' @method log likelihood
-log.likelihood <- function(x, pi, mu, sigma, nu) {
+#' @noRd
+log_likelihood <- function(x, pi, mu, sigma, nu) {
   N <- length(x)
   K <- length(pi)
   ll0 <- matrix(NA, nrow = N, ncol = K)
