@@ -38,17 +38,18 @@ and improving estimation performance.
 
 </div>
 
-Some References
+References
 
 Duttilo, P. (2024). Modelling financial returns with mixtures of
 generalized normal distributions. PhD Thesis, University “G. d’Annunzio”
 of Chieti-Pescara, pp. 1-166,
 [arXiv:2411.11847](https://doi.org/10.48550/arXiv.2411.11847)
 
-Duttilo, P. and Gattone, S.A. (2024). Enhancing parameter estimation in
-finite mixture of generalized normal distributions. pp. 1-26,
-[arXiv:2410.21559](https://doi.org/10.48550/arXiv.2410.21559)
+Duttilo, P. and Gattone, S.A. (2025). Enhancing parameter estimation in
+finite mixture of generalized normal distributions, Computational
+Statistics, pp. 1-28,
+[10.1007/s00180-025-01638-x](https://doi.org/10.1007/s00180-025-01638-x)
 
-Duttilo, P., Kume A. and Gattone, S.A. (2023). Constrained Mixtures of
-Generalized Normal Distributions. In: “SEAS IN Book of short papers
-2023”, Pearson, pp. 611-616, ISBN 9788891935618AAVV
+Duttilo, P., Gattone, S.A., and Kume A. (2025). Constrained mixtures of
+generalized normal distributions, pp. 1-34,
+[arXiv:2506.03285](https://doi.org/10.48550/arXiv.2506.03285)
