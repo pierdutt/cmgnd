@@ -5,7 +5,6 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/pierdutt/cmgnd/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pierdutt/cmgnd/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/cmgnd)](https://CRAN.R-project.org/package=cmgnd)
 [![Lifecycle:
@@ -29,12 +28,11 @@ devtools::install_github("pierdutt/cmgnd")
 <div style="text-align: justify;">
 
 **cmgnd** is an R package designed to analyse univariate data with
-complex patterns, including asymmetry, multi-modality, leptokurtosis,
-and heavy tails. The package implements the univariate constrained
-mixture of generalized normal distributions (CMGND) model, allowing
-parameter constraints to be applied globally or to specific
-subpartitions of mixture components, thereby reducing model complexity
-and improving estimation performance.
+complex patterns, including asymmetry, multi-modality, and heavy tails.
+The package implements the univariate constrained mixture of generalized
+normal distributions (cmgnd) model, allowing parameter constraints to be
+applied globally or to specific subpartitions of mixture components,
+thereby reducing model complexity and improving estimation performance.
 
 </div>
 
