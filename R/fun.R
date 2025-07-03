@@ -459,6 +459,7 @@ responsibilities <- function(x, pi, mu, sigma, nu) {
 #' @param sigma A numeric vector of the scale parameter \eqn{\sigma_k}.
 #' @param nu A numeric vector of the shape parameter \eqn{\nu_k}.
 #' @return \code{loglikelihood} returns the log-likelihood value.
+#' @export
 #' @method log likelihood
 log.likelihood <- function(x, pi, mu, sigma, nu) {
   N <- length(x)
