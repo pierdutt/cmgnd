@@ -460,7 +460,6 @@ responsibilities <- function(x, pi, mu, sigma, nu) {
 #' @param nu A numeric vector of the shape parameter \eqn{\nu_k}.
 #' @return \code{loglikelihood} returns the log-likelihood value.
 #' @method log likelihood
-#' @noRd
 log.likelihood <- function(x, pi, mu, sigma, nu) {
   N <- length(x)
   K <- length(pi)
