@@ -107,7 +107,7 @@ sim_cmgnd <- function(n = 1000, pi = rep(0.5, 2), mu = c(1, 5), sigma = c(1, 1),
 #' \item{\code{info}}{List containing a few of the original user inputs,
 #' for use by other dedicated functions of the \code{cmgnd} class.}
 #' @examples
-#' \donttest{
+#' \dontrun{
 library(cmgnd)
 # Data simulation
 pi <- c(0.5, 0.3, 0.2)
