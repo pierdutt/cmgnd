@@ -105,7 +105,7 @@
 #' Cmu <- c(0, 0, 0)
 #' Csigma <- c(0, 0, 0)
 #' Cnu <- c(0, 0, 0)
-#' model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
+#' model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
 #' model_unc$parameters
 #' plot_cmgnd(x$sim_data, model_unc)
 #' # Constrained model estimation with partition on the scale parameter
