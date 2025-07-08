@@ -39,8 +39,8 @@
 #' @param sr A character string specifying the type of convergence criterion to use.
 #' The default is \code{"like"}, but \code{"parameter"} can be used for likelihood-based convergence.
 #' @param eta A numeric value specifying the tolerance level for the likelihood-based convergence.
-#' @param seed Optional integer to set the random seed via \code{set.seed()}. If \code{NULL} (default), no seed is set and results may vary across runs.
 #' Default value is \code{.5}.
+#' @param seed Optional integer to set the random seed via \code{set.seed()}. If \code{NULL} (default), no seed is set and results may vary across runs.
 #' @details
 #' The constrained mixture of generalized normal distributions (CMGND) model is an advanced statistical tool designed for
 #' analyzing univariate data characterized by non-normal features such as asymmetry, multi-modality,
