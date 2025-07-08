@@ -74,6 +74,7 @@
 #' \item{\code{info}}{List containing a few of the original user inputs,
 #' for use by other dedicated functions of the \code{cmgnd} class.}
 #' @examples
+#' \donttest{
 # Data simulation
 pi <- c(0.5, 0.3, 0.2)
 mu <- c(-5, 2, 7)
@@ -83,7 +84,6 @@ n <- 500
 set.seed(12345)
 x <- sim_cmgnd(n, pi, mu, sigma, nu)
 
-#' \donttest{
 # Unconstrained model estimation
 Cmu <- c(0, 0, 0)
 Csigma <- c(0, 0, 0)
