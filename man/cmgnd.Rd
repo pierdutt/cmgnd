@@ -140,7 +140,7 @@ plot_cmgnd(x$sim_data, model_unc)
 # Constrained model estimation with partition on the scale parameter
 # Only the first two mixture components have common scale parameter
 Csigma <- c(1, 1, 0)
-model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
+model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
 model_con$parameters
 plot_cmgnd(x$sim_data, model_con)
 }
