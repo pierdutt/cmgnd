@@ -1,3 +1,36 @@
+#' sim_cmgnd: Function to Simulate Univariate Constrained Mixtures of Generalized Normal Distributions
+#'
+#' @description
+#' Simulate univariate constrained mixture of generalized normal distribution models.
+#' Remeber to set the set.seed() before the function sim_cmgnd().
+#'
+#' @param n A numeric value indicating the total number of observations to simulate.
+#' @param pi A numeric vector of the mixture weights \eqn{\pi_k}.
+#' @param mu A numeric vector of the location parameter \eqn{\mu_k}.
+#' @param sigma A numeric vector of the scale parameter \eqn{\sigma_k}.
+#' @param nu A numeric vector of the shape parameter \eqn{\nu_k}.
+#'
+#' @returns
+#' \item{\code{sim_data}}{The simulated data.}
+#' \item{\code{sim_clus}}{The cluster indication of simulated data.}
+#'
+#' @export
+sim_cmgnd <- function(n = 1000, pi = rep(0.5, 2), mu = c(1, 5), sigma = c(1, 1), nu = c(2, 2)) {
+  K <- length(pi)
+  n_lenght <- NA
+  sim_clus <- sim_data <- list()
+  for (k in 1:K) {
+    n_lenght[k] <- round(n * pi[k])
+    sim_data[[k]] <- gnorm::rgnorm(n_lenght[k], mu[k], sigma[k], nu[k])
+    sim_clus[[k]] <- rep(k, n_lenght[k])
+  }
+  sim_data <- purrr::list_c(sim_data)
+  sim_clus <- purrr::list_c(sim_clus)
+  df <- data.frame(sim_data, sim_clus)
+  df <- df[sample(nrow(df), n, replace = FALSE), ]
+  return(list(sim_data = df$sim_data, sim_clus = df$sim_clus))
+}
+
 #' cmgnd: Function for Clustering using Constrained Mixtures of Generalized Normal Distributions
 #'
 #' @description
