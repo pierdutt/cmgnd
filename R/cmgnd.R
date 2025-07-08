@@ -80,9 +80,7 @@ mu <- c(-5, 2, 7)
 sigma <- c(1, 1, 2)
 nu <- c(1, 2, 3)
 n <- 500
-if(!is.null(seed)){
-  set.seed(seed)
-}
+set.seed(12345)
 x <- sim_cmgnd(n, pi, mu, sigma, nu)
 
 #' \donttest{
@@ -90,7 +88,7 @@ x <- sim_cmgnd(n, pi, mu, sigma, nu)
 Cmu <- c(0, 0, 0)
 Csigma <- c(0, 0, 0)
 Cnu <- c(0, 0, 0)
-model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
+model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
 model_unc$parameters
 plot_cmgnd(x$sim_data, model_unc)
 
@@ -125,7 +123,7 @@ plot_cmgnd(x$sim_data, model_con)
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
                   laplace = FALSE, scale = FALSE,eps = 10^-4, maxit = 999, verbose = TRUE,
-                  sigbound = c(.1, 5), sr = "like",eta=0.5,seed=NULL) {
+                  sigbound = c(.1, 5), sr = "like", eta=0.5, seed=NULL) {
 
   grid=1
   # scale
