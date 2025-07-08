@@ -39,6 +39,7 @@
 #' @param sr A character string specifying the type of convergence criterion to use.
 #' The default is \code{"like"}, but \code{"parameter"} can be used for likelihood-based convergence.
 #' @param eta A numeric value specifying the tolerance level for the likelihood-based convergence.
+#' @param seed Optional integer to set the random seed via \code{set.seed()}. If \code{NULL} (default), no seed is set and results may vary across runs.
 #' Default value is \code{.5}.
 #' @details
 #' The constrained mixture of generalized normal distributions (CMGND) model is an advanced statistical tool designed for
@@ -73,28 +74,31 @@
 #' \item{\code{info}}{List containing a few of the original user inputs,
 #' for use by other dedicated functions of the \code{cmgnd} class.}
 #' @examples
-#' \dontrun{
-#' # Data simulation
-#' pi <- c(0.5, 0.3, 0.2)
-#' mu <- c(-5, 2, 7)
-#' sigma <- c(1, 1, 2)
-#' nu <- c(1, 2, 3)
-#' n <- 500
-#' set.seed(8824312)
-#' x <- sim_cmgnd(n, pi, mu, sigma, nu)
-#' # Unconstrained model estimation
-#' Cmu <- c(0, 0, 0)
-#' Csigma <- c(0, 0, 0)
-#' Cnu <- c(0, 0, 0)
-#' model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
-#' model_unc$parameters
-#' plot_cmgnd(x$sim_data, model_unc)
-#' # Constrained model estimation with partition on the scale parameter
-#' # Only the first two mixture components have common scale parameter
-#' Csigma <- c(1, 1, 0)
-#' model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
-#' model_con$parameters
-#' plot_cmgnd(x$sim_data, model_con)
+# Data simulation
+pi <- c(0.5, 0.3, 0.2)
+mu <- c(-5, 2, 7)
+sigma <- c(1, 1, 2)
+nu <- c(1, 2, 3)
+n <- 500
+if(!is.null(seed)){
+  set.seed(seed)
+}
+x <- sim_cmgnd(n, pi, mu, sigma, nu)
+
+#' \donttest{
+# Unconstrained model estimation
+Cmu <- c(0, 0, 0)
+Csigma <- c(0, 0, 0)
+Cnu <- c(0, 0, 0)
+model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
+model_unc$parameters
+plot_cmgnd(x$sim_data, model_unc)
+
+# Constrained model estimation with partition on the scale parameter
+Csigma <- c(1, 1, 0)
+model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
+model_con$parameters
+plot_cmgnd(x$sim_data, model_con)
 #' }
 #' @references
 #' Bazi, Y., Bruzzone, L., and Melgani, F. (2006). Image thresholding
@@ -121,7 +125,7 @@
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
                   laplace = FALSE, scale = FALSE,eps = 10^-4, maxit = 999, verbose = TRUE,
-                  sigbound = c(.1, 5), sr = "like",eta=0.5) {
+                  sigbound = c(.1, 5), sr = "like",eta=0.5,seed=NULL) {
 
   grid=1
   # scale
@@ -138,7 +142,9 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
 
   sigdata <- stats::sd(x)/((gamma(3/3)/gamma(1/3)))^0.5
   # starting point k-means
-  set.seed(41895160)
+  if(!is.null(seed)){
+    set.seed(seed)
+  }
   rob <- stats::kmeans(x, K, nstart = 10)
   cm1 <- rob$cluster
   mu_km <- tapply(x, cm1, mean)
@@ -180,8 +186,6 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
       it <- 0
       mu_new <- mu_km
       sigma_new <- sigma_km
-      set.seed(sp)
-
       # mixture weights initialization
       set.seed(sp)
       res <- randgenu(N, K)
@@ -379,9 +383,9 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
           #dif <- 0
           check=1
           nu_check=rep(1,K)
-          print("max iteration")
+          #print("max iteration")
           estnew <- matrix(c(pi_new, mu_new, sigma_new,nu_new), nrow = K)
-          print(estnew)
+          #print(estnew)
         }
       } # end while cycle
       if (ll_new > ll_optim) {
