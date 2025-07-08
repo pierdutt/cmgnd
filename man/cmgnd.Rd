@@ -22,7 +22,8 @@ cmgnd(
   verbose = TRUE,
   sigbound = c(0.1, 5),
   sr = "like",
-  eta = 0.5
+  eta = 0.5,
+  seed = NULL
 )
 }
 \arguments{
@@ -79,6 +80,8 @@ The default is \code{"like"}, but \code{"parameter"} can be used for likelihood-
 
 \item{eta}{A numeric value specifying the tolerance level for the likelihood-based convergence.
 Default value is \code{.5}.}
+
+\item{seed}{Optional integer to set the random seed via \code{set.seed()}. If \code{NULL} (default), no seed is set and results may vary across runs.}
 }
 \value{
 \item{\code{ll}}{The log-likelihood corresponding to the estimated model.}
@@ -117,31 +120,6 @@ for all \eqn{k \in C_r}, where \eqn{C_r} is a partition of the set \eqn{\{1, 2, 
 
 The \eqn{k \in C_r} partition for each parameter can be specified
 by the binary vectors \code{Cmu}, \code{Csigma} and \code{Cnu}.
-}
-\examples{
-\dontrun{
-# Data simulation
-pi <- c(0.5, 0.3, 0.2)
-mu <- c(-5, 2, 7)
-sigma <- c(1, 1, 2)
-nu <- c(1, 2, 3)
-n <- 500
-set.seed(8824312)
-x <- sim_cmgnd(n, pi, mu, sigma, nu)
-# Unconstrained model estimation
-Cmu <- c(0, 0, 0)
-Csigma <- c(0, 0, 0)
-Cnu <- c(0, 0, 0)
-model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
-model_unc$parameters
-plot_cmgnd(x$sim_data, model_unc)
-# Constrained model estimation with partition on the scale parameter
-# Only the first two mixture components have common scale parameter
-Csigma <- c(1, 1, 0)
-model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
-model_con$parameters
-plot_cmgnd(x$sim_data, model_con)
-}
 }
 \references{
 Bazi, Y., Bruzzone, L., and Melgani, F. (2006). Image thresholding
