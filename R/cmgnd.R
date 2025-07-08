@@ -92,8 +92,28 @@
 #'
 #' Duttilo, P., Gattone, S.A., and Kume A. (2025). Constrained mixtures of generalized normal distributions,
 #' pp. 1-34, \doi{10.48550/arXiv.2506.03285}
-#'
-#'
+#' @examples
+#' # Data simulation
+#'  pi <- c(0.5, 0.3, 0.2)
+#' mu <- c(-5, 2, 7)
+#' sigma <- c(1, 1, 2)
+#' nu <- c(1, 2, 3)
+#' n <- 500
+#' set.seed(12345)
+#' x <- sim_cmgnd(n, pi, mu, sigma, nu)
+#' # Unconstrained model estimation
+#' Cmu <- c(0, 0, 0)
+#' Csigma <- c(0, 0, 0)
+#' Cnu <- c(0, 0, 0)
+#' model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
+#' model_unc$parameters
+#' plot_cmgnd(x$sim_data, model_unc)
+#' # Constrained model estimation with partition on the scale parameter
+#' # Only the first two mixture components have common scale parameter
+#' Csigma <- c(1, 1, 0)
+#' model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
+#' model_con$parameters
+#' plot_cmgnd(x$sim_data, model_con)
 #' @export
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
