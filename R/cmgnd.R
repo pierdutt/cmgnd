@@ -73,31 +73,6 @@
 #' \item{\code{cputime}}{A numeric value indicating the cpu time employed.}
 #' \item{\code{info}}{List containing a few of the original user inputs,
 #' for use by other dedicated functions of the \code{cmgnd} class.}
-#' @examples
-#' \donttest{
-# Data simulation
-pi <- c(0.5, 0.3, 0.2)
-mu <- c(-5, 2, 7)
-sigma <- c(1, 1, 2)
-nu <- c(1, 2, 3)
-n <- 500
-set.seed(12345)
-x <- sim_cmgnd(n, pi, mu, sigma, nu)
-
-# Unconstrained model estimation
-Cmu <- c(0, 0, 0)
-Csigma <- c(0, 0, 0)
-Cnu <- c(0, 0, 0)
-model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
-model_unc$parameters
-plot_cmgnd(x$sim_data, model_unc)
-
-# Constrained model estimation with partition on the scale parameter
-Csigma <- c(1, 1, 0)
-model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu)
-model_con$parameters
-plot_cmgnd(x$sim_data, model_con)
-#' }
 #' @references
 #' Bazi, Y., Bruzzone, L., and Melgani, F. (2006). Image thresholding
 #' based on the em algorithm and the generalized gaussian distribution.
