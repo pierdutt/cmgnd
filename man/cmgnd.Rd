@@ -122,6 +122,7 @@ The \eqn{k \in C_r} partition for each parameter can be specified
 by the binary vectors \code{Cmu}, \code{Csigma} and \code{Cnu}.
 }
 \examples{
+\donttest{
 # Data simulation
  pi <- c(0.5, 0.3, 0.2)
 mu <- c(-5, 2, 7)
@@ -143,6 +144,7 @@ Csigma <- c(1, 1, 0)
 model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
 model_con$parameters
 plot_cmgnd(x$sim_data, model_con)
+}
 }
 \references{
 Bazi, Y., Bruzzone, L., and Melgani, F. (2006). Image thresholding
