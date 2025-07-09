@@ -93,6 +93,7 @@
 #' Duttilo, P., Gattone, S.A., and Kume A. (2025). Constrained mixtures of generalized normal distributions,
 #' pp. 1-34, \doi{10.48550/arXiv.2506.03285}
 #' @examples
+#' \donttest{
 #' # Data simulation
 #'  pi <- c(0.5, 0.3, 0.2)
 #' mu <- c(-5, 2, 7)
@@ -114,6 +115,7 @@
 #' model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
 #' model_con$parameters
 #' plot_cmgnd(x$sim_data, model_con)
+#' }
 #' @export
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
