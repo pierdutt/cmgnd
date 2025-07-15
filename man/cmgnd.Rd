@@ -23,7 +23,8 @@ cmgnd(
   sigbound = c(0.1, 5),
   sr = "like",
   eta = 0.5,
-  seed = NULL
+  seed = 12345,
+  seed.nstart = seq(1:nstart)
 )
 }
 \arguments{
@@ -81,7 +82,9 @@ The default is \code{"like"}, but \code{"parameter"} can be used for likelihood-
 \item{eta}{A numeric value specifying the tolerance level for the likelihood-based convergence.
 Default value is \code{.5}.}
 
-\item{seed}{Optional integer to set the random seed via \code{set.seed()}. If \code{NULL} (default), no seed is set and results may vary across runs.}
+\item{seed}{Optional integer used to set the random seed via \code{set.seed()}. The default is \code{12345}. If \code{NULL}, no seed is set and results may vary between runs.}
+
+\item{seed.nstart}{Optional numeric vector used to set the random seed via \code{set.seed()} during the initialisation of the \code{nstart} random posterior probabilities. The default is \code{seq_len(nstart)}. If \code{NULL}, no seed is set and results may vary between runs.}
 }
 \value{
 \item{\code{ll}}{The log-likelihood corresponding to the estimated model.}
@@ -122,29 +125,20 @@ The \eqn{k \in C_r} partition for each parameter can be specified
 by the binary vectors \code{Cmu}, \code{Csigma} and \code{Cnu}.
 }
 \examples{
-\donttest{
-# Data simulation
- pi <- c(0.5, 0.3, 0.2)
-mu <- c(-5, 2, 7)
-sigma <- c(1, 1, 2)
-nu <- c(1, 2, 3)
-n <- 500
-set.seed(12345)
-x <- sim_cmgnd(n, pi, mu, sigma, nu)
+# Old Faithful dataset
+x=faithful$eruptions
 # Unconstrained model estimation
-Cmu <- c(0, 0, 0)
-Csigma <- c(0, 0, 0)
-Cnu <- c(0, 0, 0)
-model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
+Cmu <- c(0, 0)
+Csigma <- c(0, 0)
+Cnu <- c(0, 0)
+model_unc <- cmgnd(x, nstart = 2, K = 2, Cmu, Csigma, Cnu)
 model_unc$parameters
-plot_cmgnd(x$sim_data, model_unc)
-# Constrained model estimation with partition on the scale parameter
-# Only the first two mixture components have common scale parameter
-Csigma <- c(1, 1, 0)
-model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
+plot_cmgnd(x, model_unc)
+# Constrained model estimation with common scale parameters
+Csigma <- c(1, 1)
+model_con <- cmgnd(x, nstart = 2, K =2, Cmu, Csigma, Cnu)
 model_con$parameters
-plot_cmgnd(x$sim_data, model_con)
-}
+plot_cmgnd(x, model_con)
 }
 \references{
 Bazi, Y., Bruzzone, L., and Melgani, F. (2006). Image thresholding

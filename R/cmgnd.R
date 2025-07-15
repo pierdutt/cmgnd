@@ -40,7 +40,8 @@
 #' The default is \code{"like"}, but \code{"parameter"} can be used for likelihood-based convergence.
 #' @param eta A numeric value specifying the tolerance level for the likelihood-based convergence.
 #' Default value is \code{.5}.
-#' @param seed Optional integer to set the random seed via \code{set.seed()}. If \code{NULL} (default), no seed is set and results may vary across runs.
+#' @param seed Optional integer used to set the random seed via \code{set.seed()}. The default is \code{12345}. If \code{NULL}, no seed is set and results may vary between runs.
+#' @param seed.nstart Optional numeric vector used to set the random seed via \code{set.seed()} during the initialisation of the \code{nstart} random posterior probabilities. The default is \code{seq_len(nstart)}. If \code{NULL}, no seed is set and results may vary between runs.
 #' @details
 #' The constrained mixture of generalized normal distributions (CMGND) model is an advanced statistical tool designed for
 #' analyzing univariate data characterized by non-normal features such as asymmetry, multi-modality,
@@ -93,34 +94,25 @@
 #' Duttilo, P., Gattone, S.A., and Kume A. (2025). Constrained mixtures of generalized normal distributions,
 #' pp. 1-34, \doi{10.48550/arXiv.2506.03285}
 #' @examples
-#' \donttest{
-#' # Data simulation
-#'  pi <- c(0.5, 0.3, 0.2)
-#' mu <- c(-5, 2, 7)
-#' sigma <- c(1, 1, 2)
-#' nu <- c(1, 2, 3)
-#' n <- 500
-#' set.seed(12345)
-#' x <- sim_cmgnd(n, pi, mu, sigma, nu)
+#' # Old Faithful dataset
+#' x=faithful$eruptions
 #' # Unconstrained model estimation
-#' Cmu <- c(0, 0, 0)
-#' Csigma <- c(0, 0, 0)
-#' Cnu <- c(0, 0, 0)
-#' model_unc <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
+#' Cmu <- c(0, 0)
+#' Csigma <- c(0, 0)
+#' Cnu <- c(0, 0)
+#' model_unc <- cmgnd(x, nstart = 2, K = 2, Cmu, Csigma, Cnu)
 #' model_unc$parameters
-#' plot_cmgnd(x$sim_data, model_unc)
-#' # Constrained model estimation with partition on the scale parameter
-#' # Only the first two mixture components have common scale parameter
-#' Csigma <- c(1, 1, 0)
-#' model_con <- cmgnd(x$sim_data, nstart = 2, K = 3, Cmu, Csigma, Cnu, seed=12345)
+#' plot_cmgnd(x, model_unc)
+#' # Constrained model estimation with common scale parameters
+#' Csigma <- c(1, 1)
+#' model_con <- cmgnd(x, nstart = 2, K =2, Cmu, Csigma, Cnu)
 #' model_con$parameters
-#' plot_cmgnd(x$sim_data, model_con)
-#' }
+#' plot_cmgnd(x, model_con)
 #' @export
 cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K), nstart = 50,
                   theta = FALSE, nustart = rep(2, K), nustartype = "random", gauss = FALSE,
                   laplace = FALSE, scale = FALSE,eps = 10^-4, maxit = 999, verbose = TRUE,
-                  sigbound = c(.1, 5), sr = "like", eta=0.5, seed=NULL) {
+                  sigbound = c(.1, 5), sr = "like", eta=0.5, seed=12345, seed.nstart=seq(1:nstart)) {
 
   grid=1
   # scale
@@ -182,7 +174,9 @@ cmgnd <- function(x, K = 2, Cmu = rep(0, K), Csigma = rep(0, K), Cnu = rep(0, K)
       mu_new <- mu_km
       sigma_new <- sigma_km
       # mixture weights initialization
-      set.seed(sp)
+      if(!is.null(seed.nstart)){
+        set.seed(seed.nstart[sp])
+      }
       res <- randgenu(N, K)
       nk <- apply(res, 2, sum)
       pi_new <- nk / N
